@@ -1,0 +1,122 @@
+from PyQt5.QtWidgets import (
+    QApplication,
+    QLabel,
+    QPushButton,
+    QLineEdit,
+    QWidget,
+    QMainWindow,
+    QVBoxLayout,
+    QHBoxLayout,
+    QGridLayout,
+    QMessageBox,
+    QRadioButton,
+    QFileDialog,
+    QCheckBox,
+    QMenuBar,
+    QStatusBar,
+    )
+from PyQt5.QtGui import (QIcon, QPixmap)
+
+import sys
+import random
+
+
+
+class CVWindow(QMainWindow):
+    
+
+    def __init__(self):
+        super().__init__()
+        self.title = "Imgae Viewer"
+        self.setWindowTitle("Drink Menu")
+        self.menu = [['Mojito',['rum', 'cos'],['limonka', 'cukier', 'woda gazowana', 'mięta']],
+                     ['Gin z tonikiem',['Gin'],['limonka', 'tonik']]
+                     
+                     ]
+
+        self.widget = QWidget()
+        #self.setGeometry(100,100,410,170)
+        self.setCentralWidget(self.widget)
+        self.layout = QGridLayout()
+        self.widget.setLayout(self.layout)
+        
+        
+        self.random2 = QPushButton("Losowy drink",)
+        self.layout.addWidget(self.random2)
+
+        self.random2.clicked.connect(self.random_show2)
+        self.random2.setIcon(QIcon('mojito.jpg'))
+        
+        
+        self.author = QPushButton("Autor")
+        self.layout.addWidget(self.author, 1,0)
+        self.author.clicked.connect(self.random_show2)
+        
+        #self.label_1 = QLabel(self)
+        #self.label_1.setText("no background image")
+        #self.label_1.resize(100, 50)
+        #self.label_1.setStyleSheet("border :3px solid blue;")
+       
+    def get_back(self):
+        self.title = "Imgae Viewer"
+        self.setWindowTitle("Drink Menu")
+        widget = QWidget()
+        self.setCentralWidget(widget)
+        self.layout = QGridLayout()
+        widget.setLayout(self.layout)
+        self.random = QPushButton("Losowy drink")
+        self.layout.addWidget(self.random, 0,2)
+        self.random.clicked.connect(self.random_show2)
+        
+        
+    def random_show2(self):
+        
+        self.title2 = "Imgae Viewer"
+        self.setWindowTitle("Random Choooose")
+        widget2 = QWidget()
+        #self.setGeometry(100,100,600,600)
+        self.setCentralWidget(widget2)
+        self.layout = QGridLayout()
+        widget2.setLayout(self.layout)
+        
+        self.back = QPushButton("Powrót")
+        self.layout.addWidget(self.back, 0,0)
+        self.back.clicked.connect(self.get_back)
+        
+        
+        
+        random_value = random.randint(0,(len(self.menu))-1)
+        x = self.menu[random_value][0]
+        alko = ''
+        for y in self.menu[random_value][1]:
+            alko = alko + y + "\n"
+        filler = ''
+        for y in self.menu[random_value][2]:
+            filler = filler + y + "\n"
+        wynik = x + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZ:" + "\n" + filler
+        
+        
+        self.text = QLabel(wynik)
+        self.layout.addWidget(self.text, 1,0)
+        widget2.setLayout(self.layout)
+        
+        self.label_1 = QLabel(self)
+        self.label_1.move(100, 100)
+        self.label_1.setText("image")
+        self.label_1.setStyleSheet("background-image : url(mojito.jpg) ; border : 2px solid blue")
+        self.label_1 = QLabel(widget2)
+        self.QMainWindow.setCentralWidget(widget2)
+        
+    #def test (self):
+
+
+
+        
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    w = CVWindow()
+    #app.setStyleSheet(pic)
+    w.show()
+    sys.exit(app.exec_())
