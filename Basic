@@ -29,28 +29,40 @@ class CVWindow(QMainWindow):
         super().__init__()
         self.title = "Imgae Viewer"
         self.setWindowTitle("Drink Menu")
-        self.menu = [['Mojito',['rum', 'cos'],['limonka', 'cukier', 'woda gazowana', 'mięta']],
-                     ['Gin z tonikiem',['Gin'],['limonka', 'tonik']]
-                     
+        self.menu = [['Mojito',['rum', 'cos'],['limonka', 'cukier', 'woda gazowana', 'mięta'],1],
+                     ['Gin z tonikiem',['Gin'],['limonka', 'tonik'],2],
+                     ['Sex On The Beach',['wódka','likier brzoskwiniowy'],['sok pomarańczowy', 'sok żurawinowy'],2],
+                     ['Cucumber Collins',['Gin'],['Świeży ogórek', 'mięta','Syrop Cukrowy','sok z cytryny','woda gazowana'],2]
                      ]
 
         self.widget = QWidget()
-        #self.setGeometry(100,100,410,170)
+        self.setGeometry(800,500,230,100)
         self.setCentralWidget(self.widget)
         self.layout = QGridLayout()
         self.widget.setLayout(self.layout)
         
         
         self.random2 = QPushButton("Losowy drink",)
-        self.layout.addWidget(self.random2)
-
+        self.layout.addWidget(self.random2,0,0)
         self.random2.clicked.connect(self.random_show2)
         self.random2.setIcon(QIcon('mojito.jpg'))
         
         
         self.author = QPushButton("Autor")
         self.layout.addWidget(self.author, 1,0)
-        self.author.clicked.connect(self.random_show2)
+        self.author.clicked.connect(self.author_presentation)
+        
+        self.pick_drink_button = QPushButton("Wybierz drink")
+        self.layout.addWidget(self.pick_drink_button, 2,0)
+        self.pick_drink_button.clicked.connect(self.pick_drink)
+        
+        self.pick_drink_button2 = QPushButton("Lista receptur")
+        self.layout.addWidget(self.pick_drink_button2, 3,0)
+        self.pick_drink_button2.clicked.connect(self.work_in_progres)
+        
+        self.pick_drink_button3 = QPushButton("Wybierz według mocy")
+        self.layout.addWidget(self.pick_drink_button3, 4,0)
+        self.pick_drink_button3.clicked.connect(self.work_in_progres)
         
         #self.label_1 = QLabel(self)
         #self.label_1.setText("no background image")
@@ -58,23 +70,42 @@ class CVWindow(QMainWindow):
         #self.label_1.setStyleSheet("border :3px solid blue;")
        
     def get_back(self):
-        self.title = "Imgae Viewer"
         self.setWindowTitle("Drink Menu")
-        widget = QWidget()
-        self.setCentralWidget(widget)
+        get_back_Widget = QWidget()
+        self.setFixedSize(230, 160)
+        self.setCentralWidget(get_back_Widget )
         self.layout = QGridLayout()
-        widget.setLayout(self.layout)
-        self.random = QPushButton("Losowy drink")
-        self.layout.addWidget(self.random, 0,2)
-        self.random.clicked.connect(self.random_show2)
+        get_back_Widget.setLayout(self.layout)
         
+        
+        self.random2_back = QPushButton("Losowy drink",)
+        self.layout.addWidget(self.random2_back,0,0)
+        self.random2_back.clicked.connect(self.random_show2)
+        self.random2_back.setIcon(QIcon('mojito.jpg'))
+        
+        
+        self.author_back = QPushButton("Autor")
+        self.layout.addWidget(self.author_back, 1,0)
+        self.author_back.clicked.connect(self.author_presentation)
+        
+        self.pick_drink_button_back = QPushButton("Wybierz drink")
+        self.layout.addWidget(self.pick_drink_button_back, 2,0)
+        self.pick_drink_button_back.clicked.connect(self.pick_drink)
+        
+        self.pick_drink_button2 = QPushButton("Lista receptur")
+        self.layout.addWidget(self.pick_drink_button2, 3,0)
+        self.pick_drink_button2.clicked.connect(self.work_in_progres)
+        
+        self.pick_drink_button3 = QPushButton("Wybierz według mocy")
+        self.layout.addWidget(self.pick_drink_button3, 4,0)
+        self.pick_drink_button3.clicked.connect(self.work_in_progres)
         
     def random_show2(self):
         
         self.title2 = "Imgae Viewer"
         self.setWindowTitle("Random Choooose")
         widget2 = QWidget()
-        #self.setGeometry(100,100,600,600)
+        self.setFixedSize(155, 200)
         self.setCentralWidget(widget2)
         self.layout = QGridLayout()
         widget2.setLayout(self.layout)
@@ -82,8 +113,7 @@ class CVWindow(QMainWindow):
         self.back = QPushButton("Powrót")
         self.layout.addWidget(self.back, 0,0)
         self.back.clicked.connect(self.get_back)
-        
-        
+        self.back.setIcon(QIcon('go_back.png'))
         
         random_value = random.randint(0,(len(self.menu))-1)
         x = self.menu[random_value][0]
@@ -95,25 +125,79 @@ class CVWindow(QMainWindow):
             filler = filler + y + "\n"
         wynik = x + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZ:" + "\n" + filler
         
-        
         self.text = QLabel(wynik)
         self.layout.addWidget(self.text, 1,0)
         widget2.setLayout(self.layout)
-        
-        self.label_1 = QLabel(self)
-        self.label_1.move(100, 100)
-        self.label_1.setText("image")
-        self.label_1.setStyleSheet("background-image : url(mojito.jpg) ; border : 2px solid blue")
-        self.label_1 = QLabel(widget2)
-        self.QMainWindow.setCentralWidget(widget2)
-        
-    #def test (self):
-
 
 
         
+    def pick_drink(self):
+        
+        self.title_pick_drink = "Drink List"
+        self.setWindowTitle("Drink List")
+        drink_list_widget = QWidget()
+        #self.setGeometry(100,100,600,600)
+        self.setCentralWidget(drink_list_widget)
+        self.layout = QGridLayout()
+        drink_list_widget.setLayout(self.layout)
+        
+        self.back = QPushButton("Powrót")
+        self.layout.addWidget(self.back, 0,0)
+        self.back.setIcon(QIcon('go_back.png'))
+        self.back.clicked.connect(self.get_back)
+        
+        count = 1
+        for x in self.menu:
+            cos = x[0]
+            self.number = QPushButton(str(cos))
+            self.layout.addWidget(self.number, count,0)
+            self.number.clicked.connect(self.picked_drink)
+            count += 1
+        
+    def picked_drink(self):
+        self.setWindowTitle("Report")
+        report = QWidget()
+        self.setFixedSize(200, 70)
+        self.setCentralWidget(report)
+        self.layout = QGridLayout()
+        report.setLayout(self.layout)
+        self.text = QLabel("Pomysł jak to zrobić będzie\nalbo funkcja umrze")
+        self.layout.addWidget(self.text, 1,0)
+        report.setLayout(self.layout)
+    
+    def author_presentation(self):
+        self.setWindowTitle("Author")
+        author = QWidget()
+        self.setGeometry(800,500,100,100)
+        self.setCentralWidget(author)
+        self.layout = QGridLayout()
+        author.setLayout(self.layout)
+        self.text = QLabel("=====================\nOpracowanie:\nRadosław Draganek\n\nPomoc techniczna:\nInżynier Jakub Froń\n\nWersja: 0.01\n=====================")
+        
+        self.back = QPushButton("Powrót")
+        self.layout.addWidget(self.back, 0,0)
+        self.back.setIcon(QIcon('go_back.png'))
+        self.back.clicked.connect(self.get_back)
+        
+        self.layout.addWidget(self.text, 1,0)
+        author.setLayout(self.layout)
 
-
+    def work_in_progres(self):
+        self.setWindowTitle("Random Choooose")
+        widget2 = QWidget()
+        self.setFixedSize(155, 120)
+        self.setCentralWidget(widget2)
+        self.layout = QGridLayout()
+        widget2.setLayout(self.layout)
+        self.text = QLabel("=================\nWORK IN PROGRESSSSS....\n=================")
+        self.layout.addWidget(self.text, 1,0)
+        widget2.setLayout(self.layout)
+        
+        self.back = QPushButton("Powrót")
+        self.layout.addWidget(self.back, 0,0)
+        self.back.clicked.connect(self.get_back)
+        self.back.setIcon(QIcon('go_back.png'))
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = CVWindow()
