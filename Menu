@@ -19,7 +19,7 @@ from PyQt5.QtGui import (QIcon, QPixmap)
 
 import sys
 import random
-
+import menu_customer
 
 
 class CVWindow(QMainWindow):
@@ -29,23 +29,18 @@ class CVWindow(QMainWindow):
         super().__init__()
         self.title = "Imgae Viewer"
         self.setWindowTitle("Drink Menu")
-        self.menu = [['Mojito',['rum', 'cos'],['limonka', 'cukier', 'woda gazowana', 'mięta'],1],
-                     ['Gin z tonikiem',['Gin'],['limonka', 'tonik'],2],
-                     ['Sex On The Beach',['wódka','likier brzoskwiniowy'],['sok pomarańczowy', 'sok żurawinowy'],2],
-                     ['Cucumber Collins',['Gin'],['Świeży ogórek', 'mięta','Syrop Cukrowy','sok z cytryny','woda gazowana'],2]
-                     ]
-
+        self.menu = menu_customer.get_menu()
         self.widget = QWidget()
         self.setGeometry(800,500,230,100)
         self.setCentralWidget(self.widget)
         self.layout = QGridLayout()
         self.widget.setLayout(self.layout)
-        
+        self.bill = 0
         
         self.random2 = QPushButton("Losowy drink",)
         self.layout.addWidget(self.random2,0,0)
-        self.random2.clicked.connect(self.random_show2)
-        self.random2.setIcon(QIcon('mojito.jpg'))
+        self.random2.clicked.connect(self.random_show)
+        self.random2.setIcon(QIcon('random.jpg'))
         
         
         self.author = QPushButton("Autor")
@@ -64,15 +59,16 @@ class CVWindow(QMainWindow):
         self.layout.addWidget(self.pick_drink_button3, 4,0)
         self.pick_drink_button3.clicked.connect(self.work_in_progres)
         
-        #self.label_1 = QLabel(self)
-        #self.label_1.setText("no background image")
-        #self.label_1.resize(100, 50)
-        #self.label_1.setStyleSheet("border :3px solid blue;")
+        self.show_money = QPushButton("Pokaż rachunek")
+        self.layout.addWidget(self.show_money, 5,0)
+        self.show_money.clicked.connect(self.how_much)
+        
+        
        
     def get_back(self):
         self.setWindowTitle("Drink Menu")
         get_back_Widget = QWidget()
-        self.setFixedSize(230, 160)
+        self.setFixedSize(230, 200)
         self.setCentralWidget(get_back_Widget )
         self.layout = QGridLayout()
         get_back_Widget.setLayout(self.layout)
@@ -80,8 +76,8 @@ class CVWindow(QMainWindow):
         
         self.random2_back = QPushButton("Losowy drink",)
         self.layout.addWidget(self.random2_back,0,0)
-        self.random2_back.clicked.connect(self.random_show2)
-        self.random2_back.setIcon(QIcon('mojito.jpg'))
+        self.random2_back.clicked.connect(self.random_show)
+        self.random2_back.setIcon(QIcon('random.jpg'))
         
         
         self.author_back = QPushButton("Autor")
@@ -100,12 +96,17 @@ class CVWindow(QMainWindow):
         self.layout.addWidget(self.pick_drink_button3, 4,0)
         self.pick_drink_button3.clicked.connect(self.work_in_progres)
         
-    def random_show2(self):
+        self.show_money = QPushButton("Pokaż rachunek")
+        self.layout.addWidget(self.show_money, 5,0)
+        self.show_money.clicked.connect(self.how_much)
+        
+    def random_show(self):
         
         self.title2 = "Imgae Viewer"
         self.setWindowTitle("Random Choooose")
         widget2 = QWidget()
-        self.setFixedSize(155, 200)
+        self.how_many = 0
+        
         self.setCentralWidget(widget2)
         self.layout = QGridLayout()
         widget2.setLayout(self.layout)
@@ -115,28 +116,46 @@ class CVWindow(QMainWindow):
         self.back.clicked.connect(self.get_back)
         self.back.setIcon(QIcon('go_back.png'))
         
+           #Getting random number to choose drink from the list
         random_value = random.randint(0,(len(self.menu))-1)
         x = self.menu[random_value][0]
+        self.x2 = self.menu[random_value][3]
+        #self.bill += x2
+        
+        self.sum_len = 9 + len(self.menu[random_value][1]) + len(self.menu[random_value][2])
+        self.setFixedSize(200, (self.sum_len * 20))
+        
         alko = ''
         for y in self.menu[random_value][1]:
             alko = alko + y + "\n"
         filler = ''
         for y in self.menu[random_value][2]:
             filler = filler + y + "\n"
-        wynik = x + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZ:" + "\n" + filler
+        wynik = x + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZ:" + "\n" + filler  +"==========" + "\n" "Cena:"  + "\n" + str(self.x2)+"zł" + "\n" +"==========" 
+        
+        self.add_money = QPushButton("dodaj do zamówienia")
+        self.layout.addWidget(self.add_money, 2,0)
+        self.add_money.clicked.connect(self.add_to_bill)
         
         self.text = QLabel(wynik)
         self.layout.addWidget(self.text, 1,0)
         widget2.setLayout(self.layout)
-
-
+        
+    def add_to_bill(self):
+        
+        self.how_many += 1
+        self.bill += self.x2
+        self.setFixedSize(200, (self.sum_len * 20)+20)
+        self.text = QLabel("Pomyslnie dodano drink"+ "  (X"+ str(self.how_many) +")")
+        self.layout.addWidget(self.text, 3,0)
         
     def pick_drink(self):
         
         self.title_pick_drink = "Drink List"
         self.setWindowTitle("Drink List")
         drink_list_widget = QWidget()
-        #self.setGeometry(100,100,600,600)
+        self.sum_len = len(self.menu)
+        self.setFixedSize(200, (self.sum_len * 35))
         self.setCentralWidget(drink_list_widget)
         self.layout = QGridLayout()
         drink_list_widget.setLayout(self.layout)
@@ -164,7 +183,11 @@ class CVWindow(QMainWindow):
         self.text = QLabel("Pomysł jak to zrobić będzie\nalbo funkcja umrze")
         self.layout.addWidget(self.text, 1,0)
         report.setLayout(self.layout)
-    
+        self.back = QPushButton("Powrót")
+        self.layout.addWidget(self.back, 0,0)
+        self.back.clicked.connect(self.get_back)
+        self.back.setIcon(QIcon('go_back.png'))
+        
     def author_presentation(self):
         self.setWindowTitle("Author")
         author = QWidget()
@@ -190,6 +213,22 @@ class CVWindow(QMainWindow):
         self.layout = QGridLayout()
         widget2.setLayout(self.layout)
         self.text = QLabel("=================\nWORK IN PROGRESSSSS....\n=================")
+        self.layout.addWidget(self.text, 1,0)
+        widget2.setLayout(self.layout)
+        
+        self.back = QPushButton("Powrót")
+        self.layout.addWidget(self.back, 0,0)
+        self.back.clicked.connect(self.get_back)
+        self.back.setIcon(QIcon('go_back.png'))
+        
+    def how_much(self):
+        self.setWindowTitle("Random Choooose")
+        widget2 = QWidget()
+        self.setFixedSize(180, 100)
+        self.setCentralWidget(widget2)
+        self.layout = QGridLayout()
+        widget2.setLayout(self.layout)
+        self.text = QLabel("====================\nŁączna wartosć zamówienia:\n" + str(self.bill)+"zł\n====================")
         self.layout.addWidget(self.text, 1,0)
         widget2.setLayout(self.layout)
         
