@@ -31,39 +31,25 @@ class CVWindow(QMainWindow):
         self.setWindowTitle("Drink Menu")
         self.menu = menu_customer.get_menu()
         self.widget = QWidget()
-        self.setGeometry(800,500,230,100)
         self.setCentralWidget(self.widget)
         self.layout = QGridLayout()
         self.widget.setLayout(self.layout)
         self.bill = 0
         
-        self.random2 = QPushButton("Losowy drink",)
-        self.layout.addWidget(self.random2,0,0)
-        self.random2.clicked.connect(self.random_show)
-        self.random2.setIcon(QIcon('random.jpg'))
+        self.intro = QLabel("              Witaj w Drink Menu!\nZa chwilę wybierzesz swietne drinki\n                  Ale najpierw...\n                Podaj swoje imię:")
+        self.layout.addWidget(self.intro)
         
+        self.imie_edit = QLineEdit()
+        self.layout.addWidget(self.imie_edit, 1, 0)
         
-        self.author = QPushButton("Autor")
-        self.layout.addWidget(self.author, 1,0)
-        self.author.clicked.connect(self.author_presentation)
+        self.save_name = QPushButton("Zapisz")
+        self.layout.addWidget(self.save_name, 2,0)
         
-        self.pick_drink_button = QPushButton("Wybierz drink")
-        self.layout.addWidget(self.pick_drink_button, 2,0)
-        self.pick_drink_button.clicked.connect(self.pick_drink)
+        self.save_name.clicked.connect(self.register)
+        self.save_name.clicked.connect(self.get_back)
         
-        self.pick_drink_button2 = QPushButton("Lista receptur")
-        self.layout.addWidget(self.pick_drink_button2, 3,0)
-        self.pick_drink_button2.clicked.connect(self.work_in_progres)
-        
-        self.pick_drink_button3 = QPushButton("Wybierz według mocy")
-        self.layout.addWidget(self.pick_drink_button3, 4,0)
-        self.pick_drink_button3.clicked.connect(self.work_in_progres)
-        
-        self.show_money = QPushButton("Pokaż rachunek")
-        self.layout.addWidget(self.show_money, 5,0)
-        self.show_money.clicked.connect(self.how_much)
-        
-        
+    def register(self):
+        self.saved_name = self.imie_edit.text()
        
     def get_back(self):
         self.setWindowTitle("Drink Menu")
@@ -72,6 +58,7 @@ class CVWindow(QMainWindow):
         self.setCentralWidget(get_back_Widget )
         self.layout = QGridLayout()
         get_back_Widget.setLayout(self.layout)
+        
         
         
         self.random2_back = QPushButton("Losowy drink",)
@@ -86,7 +73,7 @@ class CVWindow(QMainWindow):
         
         self.pick_drink_button_back = QPushButton("Wybierz drink")
         self.layout.addWidget(self.pick_drink_button_back, 2,0)
-        self.pick_drink_button_back.clicked.connect(self.pick_drink)
+        self.pick_drink_button_back.clicked.connect(self.choose_drink)
         
         self.pick_drink_button2 = QPushButton("Lista receptur")
         self.layout.addWidget(self.pick_drink_button2, 3,0)
@@ -123,7 +110,7 @@ class CVWindow(QMainWindow):
         #self.bill += x2
         
         self.sum_len = 9 + len(self.menu[random_value][1]) + len(self.menu[random_value][2])
-        self.setFixedSize(200, (self.sum_len * 20))
+        self.setFixedSize(200, (self.sum_len * 20)+10)
         
         alko = ''
         for y in self.menu[random_value][1]:
@@ -131,71 +118,156 @@ class CVWindow(QMainWindow):
         filler = ''
         for y in self.menu[random_value][2]:
             filler = filler + y + "\n"
-        wynik = x + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZ:" + "\n" + filler  +"==========" + "\n" "Cena:"  + "\n" + str(self.x2)+"zł" + "\n" +"==========" 
+        self.wynik = x + "  (" + self.menu[random_value][4] + ")" + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZE:" + "\n" + filler  +"==========" + "\n" "Cena:"  + "\n" + str(self.x2)+"zł" + "\n" +"==========" 
         
         self.add_money = QPushButton("dodaj do zamówienia")
         self.layout.addWidget(self.add_money, 2,0)
         self.add_money.clicked.connect(self.add_to_bill)
         
-        self.text = QLabel(wynik)
+        self.text = QLabel(self.wynik)
         self.layout.addWidget(self.text, 1,0)
         widget2.setLayout(self.layout)
         
+        self.text2 = QLabel("Czy chcesz dodać tego drinka?")
+        self.layout.addWidget(self.text2, 3,0)
+        
+        
     def add_to_bill(self):
+        
+        self.layout.removeWidget(self.text)
+        self.text.deleteLater()
+        self.layout.removeWidget(self.text2)
+        self.text2.deleteLater()
+
+        
+        
+        self.text = QLabel(self.wynik)
+        self.layout.addWidget(self.text, 1,0)
+        
         
         self.how_many += 1
         self.bill += self.x2
-        self.setFixedSize(200, (self.sum_len * 20)+20)
-        self.text = QLabel("Pomyslnie dodano drink"+ "  (X"+ str(self.how_many) +")")
-        self.layout.addWidget(self.text, 3,0)
+        self.text2 = QLabel("Pomyslnie dodano drink"+ "  (X"+ str(self.how_many) +")")
+        self.layout.addWidget(self.text2, 3,0)
         
-    def pick_drink(self):
         
-        self.title_pick_drink = "Drink List"
+        
+        
+    def choose_drink(self):
+        self.title_pick_drink = "Drink Category"
         self.setWindowTitle("Drink List")
+        self.setFixedSize(230, 200)
         drink_list_widget = QWidget()
-        self.sum_len = len(self.menu)
-        self.setFixedSize(200, (self.sum_len * 35))
-        self.setCentralWidget(drink_list_widget)
         self.layout = QGridLayout()
         drink_list_widget.setLayout(self.layout)
+        self.setCentralWidget(drink_list_widget)
+        
         
         self.back = QPushButton("Powrót")
         self.layout.addWidget(self.back, 0,0)
         self.back.setIcon(QIcon('go_back.png'))
         self.back.clicked.connect(self.get_back)
         
+        shots = QPushButton("     Shots     ")
+        self.layout.addWidget(shots, 1,0)
+        shots.setIcon(QIcon('shot_icon.png'))
+        shots.clicked.connect(lambda: self.picked_category("A"))
+        
+        short = QPushButton(" Short Glass ")
+        self.layout.addWidget(short, 2,0)
+        short.setIcon(QIcon('short_icon.png'))
+        short.clicked.connect(lambda: self.picked_category("B"))
+        
+        long = QPushButton(" Long Glass ")
+        self.layout.addWidget(long, 3,0)
+        long.setIcon(QIcon('long_icon.png'))
+        long.clicked.connect(lambda: self.picked_category("C"))
+        
+        hard = QPushButton(" HARD Glass ")
+        self.layout.addWidget(hard, 4,0)
+        hard.setIcon(QIcon('hard_icon.png'))
+        hard.clicked.connect(lambda: self.picked_category("D"))
+        
+        
+
+            
+            
+        
+    def picked_category(self, what_category):
+        
+        self.setWindowTitle("Drink List")
+        shots = QWidget()
+        self.setCentralWidget(shots)
+        self.layout = QGridLayout()
+        shots.setLayout(self.layout)
+        self.setFixedSize(230, 200)
+        
+        self.layout.addWidget(self.back, 0,0)
+        self.back.clicked.connect(self.choose_drink)
+        sum_len = 1
         count = 1
         for x in self.menu:
-            cos = x[0]
-            self.number = QPushButton(str(cos))
-            self.layout.addWidget(self.number, count,0)
-            self.number.clicked.connect(self.picked_drink)
-            count += 1
+            
+            if x[4][0] == what_category:
+                
+                self.return_value = what_category
+                sum_len +=1
+                
+                cos = x[0]
+                what_drink = x[4]
+                self.number = QPushButton(str(cos))
+                self.layout.addWidget(self.number, count,0)
+                self.number.clicked.connect(lambda przypisz, what_drink=what_drink: self.picked_drink(what_drink))
+                count += 1
+        self.setFixedSize(230, (sum_len * 36))
+            
+            
+            
+            
+            
         
-    def picked_drink(self):
-        self.setWindowTitle("Report")
-        report = QWidget()
-        self.setFixedSize(200, 70)
-        self.setCentralWidget(report)
-        self.layout = QGridLayout()
-        report.setLayout(self.layout)
-        self.text = QLabel("Pomysł jak to zrobić będzie\nalbo funkcja umrze")
-        self.layout.addWidget(self.text, 1,0)
-        report.setLayout(self.layout)
-        self.back = QPushButton("Powrót")
-        self.layout.addWidget(self.back, 0,0)
-        self.back.clicked.connect(self.get_back)
-        self.back.setIcon(QIcon('go_back.png'))
+            
+        
+    def picked_drink(self, number):
+        for search in self.menu:
+            if search[4] == number:
+                
+                sum_len = 9 + (2 + len(search[1]) + len(search[2]))
+                self.setFixedSize(230, (sum_len * 15))
+                
+                self.setWindowTitle(search[0])
+                shots = QWidget()
+                self.setCentralWidget(shots)
+                self.layout = QGridLayout()
+                shots.setLayout(self.layout)
+                
+                self.layout.addWidget(self.back, 0,0)
+                self.back.clicked.connect(lambda: self.picked_category(self.return_value))
+                
+                alko = ""
+                for y in search[1]:
+                    alko = alko + y + "\n"
+                filler = ''
+                for y in search[2]:
+                    filler = filler + y + "\n"
+            
+                self.wynik = search[0] + "  (" + search[4] + ")" + "\n" +"==========" + "\n" + "ALKOHOLE:" + "\n" + alko + "==========" +"\n" + "WYPEŁNIACZE:" + "\n" + filler  +"==========" + "\n" "Cena:"  + "\n" + str(search[3])+"zł" + "\n" +"==========" 
+                self.text = QLabel(self.wynik)
+                self.layout.addWidget(self.text, 1,0)
+        
+        
+                
+        
+        
         
     def author_presentation(self):
         self.setWindowTitle("Author")
         author = QWidget()
-        self.setGeometry(800,500,100,100)
+        self.setFixedSize(190, 170)
         self.setCentralWidget(author)
         self.layout = QGridLayout()
         author.setLayout(self.layout)
-        self.text = QLabel("=====================\nOpracowanie:\nRadosław Draganek\n\nPomoc techniczna:\nInżynier Jakub Froń\n\nWersja: 0.01\n=====================")
+        self.text = QLabel("=====================\nOpracowanie:\nRadosław Draganek\n\nPomoc techniczna:\nInżynier Jakub Froń\n\nWersja: 0.02\n=====================")
         
         self.back = QPushButton("Powrót")
         self.layout.addWidget(self.back, 0,0)
@@ -203,6 +275,8 @@ class CVWindow(QMainWindow):
         self.back.clicked.connect(self.get_back)
         
         self.layout.addWidget(self.text, 1,0)
+        
+
         author.setLayout(self.layout)
 
     def work_in_progres(self):
@@ -221,14 +295,19 @@ class CVWindow(QMainWindow):
         self.back.clicked.connect(self.get_back)
         self.back.setIcon(QIcon('go_back.png'))
         
+        
+        
+        
+        
+        
     def how_much(self):
         self.setWindowTitle("Random Choooose")
         widget2 = QWidget()
-        self.setFixedSize(180, 100)
+        self.setFixedSize(180, 120)
         self.setCentralWidget(widget2)
         self.layout = QGridLayout()
         widget2.setLayout(self.layout)
-        self.text = QLabel("====================\nŁączna wartosć zamówienia:\n" + str(self.bill)+"zł\n====================")
+        self.text = QLabel("====================\n"+self.saved_name+" twoja łączna wartosć\nzamówienia to:\n" + str(self.bill)+"zł\n====================")
         self.layout.addWidget(self.text, 1,0)
         widget2.setLayout(self.layout)
         
@@ -237,9 +316,13 @@ class CVWindow(QMainWindow):
         self.back.clicked.connect(self.get_back)
         self.back.setIcon(QIcon('go_back.png'))
         
+
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = CVWindow()
-    #app.setStyleSheet(pic)
+    pic = "shot_icon.png"
+    app.setStyleSheet(pic)
     w.show()
     sys.exit(app.exec_())
